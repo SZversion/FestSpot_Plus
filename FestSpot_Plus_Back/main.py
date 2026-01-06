@@ -1,9 +1,10 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-
-app = FastAPI()
+import uvicorn
+from core import config
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to FestSpot Plus!"}
+def main():
+    uvicorn.run(app=config.APP, host=config.HOST, port=config.PORT, reload=True)
+
+
+if __name__ == "__main__":
+    main()
