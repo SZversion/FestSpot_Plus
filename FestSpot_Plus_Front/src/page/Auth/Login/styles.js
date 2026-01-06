@@ -41,6 +41,7 @@ export const main = css`
 export const textField = css`
   position: relative;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -56,8 +57,36 @@ export const textField = css`
 export const visiblePassword = css`
   position: absolute;
   right: 1rem;
+  cursor: pointer;
+`;
 
-  width: 1rem;
-  height: 1rem;
-  border: 1px solid red;
+export const textFieldHelp = css`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  font-size: 1rem;
+  color: red;
+  margin: 0;
+  margin-bottom: 2%;
+`;
+
+export const buttonContainer = css`
+  width: 100%;
+  margin-bottom: 1%;
+  .MuiButtonBase-root {
+    font-size: 1.4rem;
+  }
+`;
+
+export const toSignUpContainer = css`
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  margin-bottom: 5%;
+  font-size: 1.2rem;
+
+  & > span {
+    margin: 0 2%;
+  }
 `;
