@@ -2,9 +2,13 @@
 import TextField from "@mui/material/TextField";
 import * as s from "./styles";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
-import { JOIN_REGEX } from "../../../constants/AuthRegex";
+import {
+  JOIN_REGEX,
+  JOIN_REGEX_ERROR_MESSAGE,
+} from "../../../constants/AuthRegex";
+import Button from "@mui/material/Button";
 
 function SignUp(props) {
   const navigate = useNavigate();
@@ -42,6 +46,23 @@ function SignUp(props) {
     passwordCheck: false,
   });
 
+  useEffect(() => {
+    const isEmptyValue = !!Object.values(inputValue).filter(
+      (value) => !value.trim()
+    ).length;
+    const isError = !!Object.values(errorMessage).filter((value) => !!value)
+      .length;
+    setButtonDisabled(isEmptyValue || isError);
+
+    const errorEntries = Object.entries(errorMessage);
+    errorEntries.forEach(([key, value]) => {
+      setHelpText((prev) => ({
+        ...prev,
+        [key]: !value ? "" : JOIN_REGEX_ERROR_MESSAGE[key],
+      }));
+    });
+  }, [errorMessage]);
+
   const hanleInputValueOnChange = (e) => {
     setInputValue((prev) => ({
       ...prev,
@@ -75,7 +96,7 @@ function SignUp(props) {
 
   const handleOnKeyDown = (e) => {
     if (e.keyCode === 13 && e.target.name === "email") {
-      console.log("회원가입");
+      handleSignupOnClick();
     }
   };
 
@@ -84,6 +105,31 @@ function SignUp(props) {
       ...prev,
       [key]: !prev[key],
     }));
+  };
+
+  const handleSignupOnClick = async (e) => {
+    try {
+      const response = await reqSignup(inputValue);
+      const user = response.data?.body;
+
+      await Swal.fire({
+        title: "회원가입 성공",
+        html: `${user.userNickName}님 환영합니다.<br>로그인 화면으로 이동합니다.`,
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+      });
+      navigate("/auth/login");
+    } catch (error) {
+      let errorText = Object.values(error.response?.data?.body).join("<br>");
+
+      await Swal.fire({
+        title: "회원가입 실패",
+        html: `${errorText}`,
+        icon: "error",
+      });
+    }
   };
 
   const [isMounted, setIsMounted] = useState(false);
@@ -197,6 +243,21 @@ function SignUp(props) {
             {errorMessage.userEmail && (
               <p css={s.textFieldHelp}>{helpText.userEmail}</p>
             )}
+          </div>
+          <div css={s.buttonContainer}>
+            <Button
+              fullWidth={true}
+              disabled={buttonDisabled}
+              variant="contained"
+              css={s.signUpButton}
+              onClick={handleSignupOnClick}
+            >
+              회원가입
+            </Button>
+          </div>
+          <div css={s.toLoginContainer}>
+            <span>계정이 있으신가요?</span>
+            <Link to={"/auth/login"}>로그인</Link>
           </div>
         </main>
       </div>

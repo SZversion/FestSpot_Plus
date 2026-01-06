@@ -10,7 +10,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
-def get_users():
-    results = users.list_user()
-    return {"users": results}
+@router.get("/{userid}")
+def get_user_info(userid: str):
+    result = users.user_info(userid)
+    return {"user": result}
