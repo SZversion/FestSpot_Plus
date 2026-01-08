@@ -12,6 +12,8 @@ router = APIRouter(
     tags=["users"],
     responses={404: {"description": "Not found"}},
 )
+
+
 service = UserService(UserRepository())
 
 
@@ -28,7 +30,7 @@ def get_user_by_id(
     return service.get_user_by_id(session, user_id)
 
 
-@router.post("{user_id}", response_model=UserCreate)
+@router.post("", response_model=UserCreate)
 def create_user(
     user: UserCreate,
     session: Session = Depends(get_session),

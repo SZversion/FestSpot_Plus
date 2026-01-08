@@ -8,7 +8,9 @@ import {
   JOIN_REGEX,
   JOIN_REGEX_ERROR_MESSAGE,
 } from "../../../constants/AuthRegex";
+import Swal from "sweetalert2";
 import Button from "@mui/material/Button";
+import { reqSignup } from "../../../api/authApi";
 
 function SignUp(props) {
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ function SignUp(props) {
     userLoginId: "",
     userPassword: "",
     passwordCheck: "",
-    userNickName: "",
+    userNickname: "",
     userEmail: "",
   });
 
@@ -29,7 +31,7 @@ function SignUp(props) {
     userLoginId: false,
     userPassword: false,
     passwordCheck: false,
-    userNickName: false,
+    userNickname: false,
     userEmail: false,
   });
 
@@ -37,7 +39,7 @@ function SignUp(props) {
     userLoginId: "",
     userPassword: "",
     passwordCheck: "",
-    userNickName: "",
+    userNickname: "",
     userEmail: "",
   });
 
@@ -110,19 +112,19 @@ function SignUp(props) {
   const handleSignupOnClick = async (e) => {
     try {
       const response = await reqSignup(inputValue);
-      const user = response.data?.body;
+      const user = response.data;
 
       await Swal.fire({
         title: "회원가입 성공",
-        html: `${user.userNickName}님 환영합니다.<br>로그인 화면으로 이동합니다.`,
+        html: `${user.userNickname}님 환영합니다.<br>로그인 화면으로 이동합니다.`,
         icon: "success",
         showConfirmButton: false,
         timer: 1500,
         timerProgressBar: true,
       });
-      navigate("/auth/login");
     } catch (error) {
-      let errorText = Object.values(error.response?.data?.body).join("<br>");
+      console.log(error);
+      let errorText = Object.values(error.response?.data?.detail).join("<br>");
 
       await Swal.fire({
         title: "회원가입 실패",
@@ -219,15 +221,15 @@ function SignUp(props) {
           <div css={s.textField}>
             <TextField
               fullWidth={true}
-              error={errorMessage.userNickName}
+              error={errorMessage.userNickname}
               label="닉네임을 입력하세요."
               variant="outlined"
-              name="userNickName"
-              value={inputValue.userNickName}
+              name="userNickname"
+              value={inputValue.userNickname}
               onChange={hanleInputValueOnChange}
             />
-            {errorMessage.userNickName && (
-              <p css={s.textFieldHelp}>{helpText.userNickName}</p>
+            {errorMessage.userNickname && (
+              <p css={s.textFieldHelp}>{helpText.userNickname}</p>
             )}
           </div>
           <div css={s.textField}>

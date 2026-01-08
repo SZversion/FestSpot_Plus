@@ -12,9 +12,11 @@ class User(SQLModel, table=True):
     user_password: str
     user_email: str
     user_nickname: str
-    user_profile_img_url: Optional[str] = None
+    user_profile_img_url: str = Field(
+        default="https://www.avdbs.com/menu/actor.php?actor_idx=11735"
+    )
 
-    created_at: datetime = Field(default_factory=datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     provider: Optional[str] = None
     provider_id: Optional[str] = None

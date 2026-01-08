@@ -24,6 +24,11 @@ class UserRepository:
         result = session.exec(statement).first()
         return result
 
+    def get_user_by_nickname(self, session: Session, nickname: str) -> Optional[User]:
+        statement = select(User).where(User.user_nickname == nickname)
+        result = session.exec(statement).first()
+        return result
+
     def list_users(
         self, session: Session, skip: int = 0, limit: int = 50
     ) -> list[User]:

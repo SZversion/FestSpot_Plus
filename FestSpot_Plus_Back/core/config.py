@@ -14,3 +14,5 @@ MYSQL_DB_CONFIG = {
     "pool_size": 10,
     "pool_name": "mysql_pool",
 }
+
+API_PREFIX = "/api"
