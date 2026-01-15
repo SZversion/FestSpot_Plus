@@ -10,9 +10,9 @@ class UserRepository:
             session.commit()
             session.refresh(user)
             return user
-        except Exception as e:
+        except Exception:
             session.rollback()
-            raise e
+            raise RuntimeError("사용자 생성에 실패했습니다.")
 
     def get_user_by_id(self, session: Session, user_id: int) -> Optional[User]:
         statement = select(User).where(User.user_id == user_id)

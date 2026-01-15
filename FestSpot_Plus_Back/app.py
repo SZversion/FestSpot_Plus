@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from core.config import API_PREFIX
-from routers import user_router
+from routers import auth_router, user_router
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -17,6 +17,7 @@ app.add_middleware(
 )
 
 app.include_router(user_router.router, prefix=API_PREFIX)
+app.include_router(auth_router.router, prefix=API_PREFIX)
 
 
 @app.get("/")
