@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 from db.session import get_session
-from schemas.user_schema import UserResponse, UserResponse
+from schemas.user_schema import UserResponse
 from repositories.user_repository import UserRepository
 from service.user_service import UserService
 
@@ -24,12 +24,3 @@ def get_user_by_id(
     service: UserService = Depends(get_service),
 ):
     return service.get_user_by_id(session, user_id)
-
-
-@router.put("/{user_id}", response_model=bool)
-def delete_user(
-    user_id: int,
-    session: Session = Depends(get_session),
-    service: UserService = Depends(get_service),
-):
-    return service.delete_user(session, user_id)

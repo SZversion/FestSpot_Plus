@@ -8,6 +8,7 @@ dependencies = [
     "bcrypt>=3.2,<4.0",
     "fastapi[standard]>=0.127.1",
     "mysql-connector-python>=9.5.0",
+    "oracledb>=3.4.2",
     "passlib>=1.7.4,<2.0",
     "pymysql>=1.1.2",
     "python-jose>=3.5.0",

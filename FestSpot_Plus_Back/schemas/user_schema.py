@@ -5,14 +5,16 @@ from schemas.camel_base import CamelModel
 class UserBase(CamelModel):
     user_nickname: str
     user_email: str
-    user_profile_img_url: str
-    provider: Optional[str] = None
 
 
 class UserResponse(UserBase):
     user_id: int
+    user_profile_img_url: str
+    provider: Optional[str] = None
 
 
-class UserRequest(UserBase):
+class UserCreate(UserBase):
     user_login_id: str
     user_password: str
+    user_profile_img_url: str = "https://www.avdbs.com/menu/actor.php?actor_idx=11735"
+    provider: Optional[str] = "local"

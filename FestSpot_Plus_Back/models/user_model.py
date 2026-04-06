@@ -1,24 +1,24 @@
 from datetime import datetime, timezone
-from typing import Optional
-from sqlmodel import Field, SQLModel
+from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer, String, DateTime, text
+
+Base = declarative_base()
 
 
-class User(SQLModel, table=True):
-    __tablename__ = "user_tb"
+class User(Base):
+    __tablename__ = "USER_TB"
+    __table_args__ = {"schema": "FESTSPOT_ADMIN"}
 
-    user_id: Optional[int] = Field(default=None, primary_key=True)
+    user_id = Column(Integer, primary_key=True, autoincrement=True)
 
-    user_login_id: str
-    user_password: str
-    user_email: str
-    user_nickname: str
-    user_profile_img_url: str = Field(
-        default="https://www.avdbs.com/menu/actor.php?actor_idx=11735"
-    )
+    user_login_id = Column(String(255), nullable=False)
+    user_password = Column(String(255), nullable=False)
+    user_email = Column(String(255), nullable=False)
+    user_nickname = Column(String(255), nullable=False)
+    user_profile_img_url = Column(String(255))
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    provider = Column(String(255), nullable=True)
+    provider_id = Column(String(255), nullable=True)
 
-    provider: Optional[str] = None
-    provider_id: Optional[str] = None
-
-    deleted_at: Optional[datetime] = None
+    deleted_at = Column(DateTime, nullable=True)
