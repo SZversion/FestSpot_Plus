@@ -9,7 +9,8 @@ def to_camel(string: str) -> str:
 
 class CamelModel(SQLModel):
     model_config = ConfigDict(
+        from_attributes=True,
         alias_generator=to_camel,
         populate_by_name=True,
-        extra="ignore",  # ⭐ passwordCheck 같은 필드 무시
+        extra="ignore",
     )

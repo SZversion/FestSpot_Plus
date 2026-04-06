@@ -1,16 +1,14 @@
 from pydantic import BaseModel
 
 
-class AuthBase(BaseModel):
-    access_token: str
-    refresh_token: str
-
-
-class AuthResponse(AuthBase):
+class AuthResponse(BaseModel):
     user_id: int
     user_login_id: str
+    access_token: str = ""
+
+    model_config = {"from_attributes": True}
 
 
-class AuthRequest(AuthBase):
+class AuthRequest(BaseModel):
     user_login_id: str
     user_password: str

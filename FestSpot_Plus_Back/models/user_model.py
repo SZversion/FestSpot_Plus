@@ -1,8 +1,9 @@
 from datetime import datetime, timezone
 from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, text
 
 Base = declarative_base()
+
 
 class User(Base):
     __tablename__ = "USER_TB"
@@ -14,9 +15,7 @@ class User(Base):
     user_password = Column(String(255), nullable=False)
     user_email = Column(String(255), nullable=False)
     user_nickname = Column(String(255), nullable=False)
-
-    user_profile_img_url = Column(String(255), default="https://www.avdbs.com/menu/actor.php?actor_idx=11735")
-
+    user_profile_img_url = Column(String(255))
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     provider = Column(String(255), nullable=True)

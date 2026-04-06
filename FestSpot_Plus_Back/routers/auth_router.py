@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from db.session import get_session
 from repositories.user_repository import UserRepository
 from schemas.auth_schema import AuthRequest, AuthResponse
-from schemas.user_schema import UserCreate
+from schemas.user_schema import UserCreate, UserResponse
 from service.auth_service import AuthService
 
 
@@ -39,18 +39,15 @@ def login_user(
     service: AuthService = Depends(get_service),
 ):
 
-    logined_user = service.login_user(session, user)
+    db_user, access_token = service.login_user(session, user)
 
     response.set_cookie(
         key="access_token",
-        value=logined_user.access_token,
+        value=access_token,
         httponly=True,
         secure=True,
         samesite="lax",
         max_age=60 * 60,
     )
 
-    return {
-        "user_id": logined_user.user_id,
-        "user_login_id": logined_user.user_login_id,
-    }
+    return UserResponse.model_validate(db_user)

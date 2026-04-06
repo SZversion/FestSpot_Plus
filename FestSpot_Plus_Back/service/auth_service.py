@@ -35,12 +35,7 @@ class AuthService:
                 user_data["user_password"] = hash_password(user.user_password)
                 db_user = User(**user_data)
                 saved = self.repo.create_user(session, db_user)
-            return AuthResponse(
-                user_id=saved.user_id,
-                user_login_id=saved.user_login_id,
-                access_token="",
-                refresh_token="",
-            )
+            return AuthResponse.model_validate(saved)
 
         except HTTPException:
             raise
@@ -67,9 +62,4 @@ class AuthService:
             data={"sub": db_user.user_login_id}
         )
 
-        return AuthResponse(
-            user_id=db_user.user_id,
-            user_login_id=db_user.user_login_id,
-            access_token=access_token,
-            refresh_token="",
-        )
+        return db_user, access_token

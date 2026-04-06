@@ -1,8 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from repositories.user_repository import UserRepository
-from schemas.user_schema import UserResponse, UserCreate
-from models.user_model import User
+from schemas.user_schema import UserResponse
 
 
 class UserService:
@@ -27,7 +26,4 @@ class UserService:
                 detail="사용자를 찾을 수 없습니다.",
             )
 
-    def create_user(self, session: Session, user_data: UserCreate) -> UserResponse:
-        user = User(**user_data.model_dump())
-        created_user = self.repo.create_user(session, user)
-        return UserResponse.model_validate(created_user)
+        return UserResponse.model_validate(user)
