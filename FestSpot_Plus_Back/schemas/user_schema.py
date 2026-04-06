@@ -13,6 +13,6 @@ class UserResponse(UserBase):
     user_id: int
 
 
-class UserRequest(UserBase):
+class UserCreate(UserBase):
     user_login_id: str
     user_password: str

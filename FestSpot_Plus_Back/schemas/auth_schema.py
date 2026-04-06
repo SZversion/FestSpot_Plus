@@ -11,6 +11,6 @@ class AuthResponse(AuthBase):
     user_login_id: str
 
 
-class AuthRequest(BaseModel):
+class AuthRequest(AuthBase):
     user_login_id: str
     user_password: str

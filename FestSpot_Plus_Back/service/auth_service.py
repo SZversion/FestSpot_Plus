@@ -1,10 +1,10 @@
 from fastapi import HTTPException, status
-from sqlmodel import Session
 from core.security import hash_password, verify_password
 from models.user_model import User
+from sqlalchemy.orm import Session
 from repositories.user_repository import UserRepository
-from schemas.auth_schema import AuthBase, AuthRequest, AuthResponse
-from schemas.user_schema import UserRequest
+from schemas.auth_schema import AuthRequest, AuthResponse
+from schemas.user_schema import UserCreate
 from service.token_service import TokenService
 
 
@@ -15,27 +15,36 @@ class AuthService:
         self.repo = repo
         self.token_service = token_service
 
-    def create_user(self, session: Session, user: UserRequest) -> AuthResponse:
+    def create_user(self, session: Session, user: UserCreate) -> AuthResponse:
         try:
-            duplicated = self.repo.get_user_by_login_id(session, user.user_login_id)
-            if duplicated:
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail="이미 사용 중인 로그인 ID입니다.",
-                )
-            duplicated = self.repo.get_user_by_nickname(session, user.user_nickname)
-            if duplicated:
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail="이미 사용 중인 닉네임입니다.",
-                )
+            with session.begin():
+                duplicated = self.repo.get_user_by_login_id(session, user.user_login_id)
+                if duplicated:
+                    raise HTTPException(
+                        status_code=status.HTTP_409_CONFLICT,
+                        detail="이미 사용 중인 로그인 ID입니다.",
+                    )
+                duplicated = self.repo.get_user_by_nickname(session, user.user_nickname)
+                if duplicated:
+                    raise HTTPException(
+                        status_code=status.HTTP_409_CONFLICT,
+                        detail="이미 사용 중인 닉네임입니다.",
+                    )
 
-            user_data = user.model_dump()
-            user_data["user_password"] = hash_password(user.user_password)
-            db_user = User(**user_data)
-            saved = self.repo.create_user(session, db_user)
-            return AuthResponse.model_validate(saved)
-        except RuntimeError:
+                user_data = user.model_dump()
+                user_data["user_password"] = hash_password(user.user_password)
+                db_user = User(**user_data)
+                saved = self.repo.create_user(session, db_user)
+            return AuthResponse(
+                user_id=saved.user_id,
+                user_login_id=saved.user_login_id,
+                access_token="",
+                refresh_token="",
+            )
+
+        except HTTPException:
+            raise
+        except Exception:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="사용자 생성에 실패했습니다.",
