@@ -8,11 +8,18 @@ import {
   JOIN_REGEX_ERROR_MESSAGE,
 } from "../../../constants/AuthRegex";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { reqLogin, reqPrincipal } from "../../../api/authApi";
+import { useQueryClient } from "@tanstack/react-query";
+import usePrincipalQuery from "../../../queries/auth/usePrincipalQuery";
 
 function Login(props) {
   const passwordInputRef = useRef(null);
+  const principalQuery = usePrincipalQuery();
+  const principal = principalQuery?.data?.data || [];
+  const queryClient = useQueryClient();
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
   const [inputValue, setInputValue] = useState({
@@ -36,7 +43,7 @@ function Login(props) {
 
   useEffect(() => {
     const isEmptyValue = !!Object.values(inputValue).filter(
-      (value) => !value.trim()
+      (value) => !value.trim(),
     ).length;
     const isError = !!Object.values(errorMessage).filter((value) => !!value)
       .length;
@@ -82,8 +89,7 @@ function Login(props) {
   const handleLoginOnClick = async (e) => {
     try {
       const response = await reqLogin(inputValue);
-      const { accessToken } = response?.data?.body;
-      localStorage.setItem("AccessToken", `Bearer ${accessToken}`);
+      console.log("response : ", response);
 
       await queryClient.invalidateQueries({
         queryKey: ["principal"],
@@ -91,7 +97,7 @@ function Login(props) {
 
       // 탈퇴한 회원정보로 로그인하면 막음
       if (!!principal?.deletedAt) {
-        localStorage.clear();
+        Cookies.remove("access_token");
         await queryClient.invalidateQueries({
           queryKey: ["principal"],
         });
@@ -110,11 +116,8 @@ function Login(props) {
         timerProgressBar: true,
       });
 
-      navigate("/");
+      Navigate("/");
     } catch (error) {
-      let errorText = Object.values(error.response?.data?.body).join("<br>");
-      console.log(error);
-
       await Swal.fire({
         title: "로그인 실패",
         html: `${errorText}`,
