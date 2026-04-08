@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 from schemas.camel_base import CamelModel
 
@@ -10,6 +11,8 @@ class UserBase(CamelModel):
 class UserResponse(UserBase):
     user_id: int
     user_profile_img_url: str
+    created_at: datetime
+    delete_at: Optional[datetime] = None
     provider: Optional[str] = None
 
 

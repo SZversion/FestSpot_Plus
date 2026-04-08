@@ -90,3 +90,49 @@ export const toLoginContainer = css`
     margin: 0 2%;
   }
 `;
+
+export const divider = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 5%;
+
+  /* border: 1px solid red; */
+
+  & > span {
+    margin: 0 1.5rem;
+  }
+
+  & > div {
+    box-shadow: 0 0 0 0.01rem #000;
+    flex-grow: 1;
+  }
+`;
+
+export const footer = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: auto;
+`;
+
+export const OAuth2Container = css`
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 80%;
+
+  & > a {
+    border-radius: 50%;
+    padding: 3%;
+    width: auto;
+    height: 4vh;
+    & > img {
+      height: 100%;
+    }
+  }
+`;

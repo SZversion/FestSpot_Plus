@@ -11,6 +11,9 @@ import {
 import Swal from "sweetalert2";
 import Button from "@mui/material/Button";
 import { reqSignup } from "../../../api/authApi";
+import googleLogo from "../img/Google__G__logo.png";
+import kakaoLogo from "../img/kakao_logo.png";
+import naverLogo from "../img/naver_logo.png";
 
 function SignUp(props) {
   const navigate = useNavigate();
@@ -50,7 +53,7 @@ function SignUp(props) {
 
   useEffect(() => {
     const isEmptyValue = !!Object.values(inputValue).filter(
-      (value) => !value.trim()
+      (value) => !value.trim(),
     ).length;
     const isError = !!Object.values(errorMessage).filter((value) => !!value)
       .length;
@@ -122,8 +125,9 @@ function SignUp(props) {
         timer: 1500,
         timerProgressBar: true,
       });
+
+      navigate("/auth/login");
     } catch (error) {
-      console.log(error);
       let errorText = Object.values(error.response?.data?.detail).join("<br>");
 
       await Swal.fire({
@@ -262,6 +266,24 @@ function SignUp(props) {
             <Link to={"/auth/login"}>로그인</Link>
           </div>
         </main>
+        <div css={s.divider}>
+          <div />
+          <span>간편 회원가입</span>
+          <div />
+        </div>
+        <footer css={s.footer}>
+          <div css={s.OAuth2Container}>
+            <Link>
+              <img src={googleLogo} />
+            </Link>
+            <Link>
+              <img src={kakaoLogo} />
+            </Link>
+            <Link>
+              <img src={naverLogo} />
+            </Link>
+          </div>
+        </footer>
       </div>
     </div>
   );

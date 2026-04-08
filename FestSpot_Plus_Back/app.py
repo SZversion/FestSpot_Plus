@@ -16,10 +16,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 app.include_router(user_router.router, prefix=API_PREFIX)
 app.include_router(auth_router.router, prefix=API_PREFIX)
-
-
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to FestSpot Plus!"}

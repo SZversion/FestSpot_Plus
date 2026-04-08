@@ -6,6 +6,7 @@ from repositories.user_repository import UserRepository
 from schemas.auth_schema import AuthRequest, AuthResponse
 from schemas.user_schema import UserCreate, UserResponse
 from service.auth_service import AuthService
+from util.auth_util import get_current_user
 
 
 router = APIRouter(
@@ -45,9 +46,14 @@ def login_user(
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=True,
+        secure=False,
         samesite="lax",
         max_age=60 * 60,
     )
 
     return UserResponse.model_validate(db_user)
+
+
+@router.get("/me")
+def get_me(current_user=Depends(get_current_user)):
+    return current_user

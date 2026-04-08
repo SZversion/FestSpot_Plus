@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class AuthResponse(BaseModel):
@@ -10,5 +10,6 @@ class AuthResponse(BaseModel):
 
 
 class AuthRequest(BaseModel):
-    user_login_id: str
-    user_password: str
+    user_login_id: str = Field(alias="userLoginId")
+    user_password: str = Field(alias="userPassword")
+    access_token: str = Field(default= "" ,alias="accessToken")

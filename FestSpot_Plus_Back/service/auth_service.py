@@ -59,7 +59,7 @@ class AuthService:
                 detail="비밀번호가 일치하지 않습니다.",
             )
         access_token = self.token_service.create_access_token(
-            data={"sub": db_user.user_login_id}
+            data={"sub": str(db_user.user_id), "nick": db_user.user_nickname}
         )
 
         return db_user, access_token

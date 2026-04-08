@@ -10,8 +10,8 @@ import {
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import Button from "@mui/material/Button";
-import { Link, Navigate } from "react-router-dom";
-import { reqLogin, reqPrincipal } from "../../../api/authApi";
+import { Link, useNavigate } from "react-router-dom";
+import { reqLogin } from "../../../api/authApi";
 import { useQueryClient } from "@tanstack/react-query";
 import usePrincipalQuery from "../../../queries/auth/usePrincipalQuery";
 
@@ -20,6 +20,7 @@ function Login(props) {
   const principalQuery = usePrincipalQuery();
   const principal = principalQuery?.data?.data || [];
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
   const [inputValue, setInputValue] = useState({
@@ -89,7 +90,7 @@ function Login(props) {
   const handleLoginOnClick = async (e) => {
     try {
       const response = await reqLogin(inputValue);
-      console.log("response : ", response);
+      const userNickname = response?.data.userNickname;
 
       await queryClient.invalidateQueries({
         queryKey: ["principal"],
@@ -110,17 +111,18 @@ function Login(props) {
 
       await Swal.fire({
         title: "로그인 성공",
+        text: `${userNickname}님 환영합니다.`,
         icon: "success",
         showConfirmButton: false,
         timer: 1500,
         timerProgressBar: true,
       });
 
-      Navigate("/");
+      // navigate("/");
     } catch (error) {
       await Swal.fire({
         title: "로그인 실패",
-        html: `${errorText}`,
+        html: `${error.response?.data?.detail}`,
         icon: "error",
       });
     }
