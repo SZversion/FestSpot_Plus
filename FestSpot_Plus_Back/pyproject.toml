@@ -5,14 +5,13 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "bcrypt>=3.2,<4.0",
+    "fastapi-users[sqlalchemy]>=15.0.5",
     "fastapi[standard]>=0.127.1",
     "mysql-connector-python>=9.5.0",
     "oracledb>=3.4.2",
     "passlib>=1.7.4,<2.0",
     "pymysql>=1.1.2",
     "python-jose>=3.5.0",
-    "python-multipart>=0.0.21",
     "sqlalchemy>=2.0.45",
     "uvicorn>=0.40.0",
 ]
